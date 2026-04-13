@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useId } from 'react'
 import {
   Select,
   SelectContent,
@@ -11,12 +11,13 @@ import { Label } from '@/components/ui/label'
 
 export function SelectWithLabel(props) {
   const { label, onValueChange, options, value } = props
+  const triggerId = useId()
 
   return (
     <div className="flex flex-col gap-1.5">
-      <Label>{label}</Label>
+      <Label htmlFor={triggerId}>{label}</Label>
       <Select value={value} onValueChange={onValueChange}>
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger id={triggerId} className="w-[180px]">
           <SelectValue />
         </SelectTrigger>
         <SelectContent className="bg-white">

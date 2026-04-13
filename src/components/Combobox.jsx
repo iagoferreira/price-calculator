@@ -22,13 +22,15 @@ import { Label } from '@/components/ui/label'
 
 export function Combobox({ value, setValue, options }) {
   const [open, setOpen] = React.useState(false)
+  const triggerId = React.useId()
 
   return (
     <div className="flex flex-col gap-1.5">
-      <Label>Passo</Label>
+      <Label htmlFor={triggerId}>Passo</Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
+            id={triggerId}
             variant="outline"
             role="combobox"
             aria-expanded={open}
