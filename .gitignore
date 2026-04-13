@@ -15,6 +15,14 @@ dist-ssr
 # Test coverage (generated)
 coverage/
 
+# Env files (secrets); *.local above already ignores .env.local, etc.
+.env
+!.env.example
+
+# Windows
+Thumbs.db
+Desktop.ini
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
