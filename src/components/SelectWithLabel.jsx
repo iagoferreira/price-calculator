@@ -14,13 +14,18 @@ export function SelectWithLabel(props) {
   const triggerId = useId()
 
   return (
-    <div className="flex flex-col gap-1.5">
-      <Label htmlFor={triggerId}>{label}</Label>
+    <div className="flex min-w-0 flex-col gap-1.5">
+      <Label
+        htmlFor={triggerId}
+        className="text-xs font-medium text-muted-foreground"
+      >
+        {label}
+      </Label>
       <Select value={value} onValueChange={onValueChange}>
-        <SelectTrigger id={triggerId} className="w-[180px]">
+        <SelectTrigger id={triggerId} className="h-9 w-full">
           <SelectValue />
         </SelectTrigger>
-        <SelectContent className="bg-white">
+        <SelectContent>
           <SelectGroup>
             {options.map((option, index) => (
               <SelectItem value={option} key={index}>

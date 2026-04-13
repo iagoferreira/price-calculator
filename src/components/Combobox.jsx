@@ -25,8 +25,13 @@ export function Combobox({ value, setValue, options }) {
   const triggerId = React.useId()
 
   return (
-    <div className="flex flex-col gap-1.5">
-      <Label htmlFor={triggerId}>Passo</Label>
+    <div className="flex min-w-0 flex-col gap-1.5">
+      <Label
+        htmlFor={triggerId}
+        className="text-xs font-medium text-muted-foreground"
+      >
+        Passo
+      </Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -34,14 +39,14 @@ export function Combobox({ value, setValue, options }) {
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-[180px] justify-between"
+            className="h-9 w-full justify-between px-2 font-normal"
           >
             {value ? value : 'Selecione o passo…'}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0">
-          <Command className="bg-white">
+        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+          <Command>
             <CommandInput placeholder="Procure um passo…" />
             <CommandEmpty>Nenhum passo encontrado</CommandEmpty>
             <CommandGroup>

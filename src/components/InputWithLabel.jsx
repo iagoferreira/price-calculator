@@ -7,9 +7,11 @@ export function InputWithLabel(props) {
   const id = useId()
 
   return (
-    <div className="grid w-full max-w-40 items-center gap-1.5">
-      <Label htmlFor={id}>{label}</Label>
-      <Input id={id} onChange={onChange} />
+    <div className="grid min-w-0 grid-cols-1 items-start gap-1.5">
+      <Label htmlFor={id} className="text-xs font-medium text-muted-foreground">
+        {label}
+      </Label>
+      <Input id={id} onChange={onChange} className="h-9" />
     </div>
   )
 }
@@ -19,9 +21,11 @@ export function PrecoInputWithLabel(props) {
   const id = useId()
 
   return (
-    <div className="grid w-full max-w-40 items-center gap-1.5 absolute top-1 right-1">
-      <Label htmlFor={id}>{label}</Label>
-      <Input id={id} onChange={onChange} />
+    <div className="grid min-w-0 grid-cols-1 items-start gap-1.5">
+      <Label htmlFor={id} className="text-xs font-medium text-muted-foreground">
+        {label}
+      </Label>
+      <Input id={id} onChange={onChange} className="h-9" />
     </div>
   )
 }

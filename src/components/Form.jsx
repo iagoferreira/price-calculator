@@ -5,7 +5,6 @@ import { InputWithLabel, PrecoInputWithLabel } from '@/components/InputWithLabel
 import { Button } from '@/components/ui/button'
 import { SelectWithLabel } from '@/components/SelectWithLabel'
 import { Combobox } from '@/components/Combobox'
-import { Label } from '@/components/ui/label'
 
 /** pt-BR com até 20 casas decimais (máx. do Intl); evita truncar como em maximumFractionDigits: 2. */
 function formatarValorFinalPreciso(valor) {
@@ -75,55 +74,57 @@ export function Form() {
   return (
     <div>
       <form
-        className="relative"
         onSubmit={(e) => {
           e.preventDefault()
           callCalcularPesoDaPeca()
         }}
       >
-        <div className="flex flex-row gap-3">
-          <div className="flex flex-col gap-2">
-            <InputWithLabel
-              label="Número de dentes"
-              onChange={(event) => setNumeroDeDentes(event.currentTarget.value)}
-            />
+        <div className="grid grid-cols-2 gap-x-3 gap-y-3 sm:gap-x-4">
+          <InputWithLabel
+            label="Número de dentes"
+            onChange={(event) => setNumeroDeDentes(event.currentTarget.value)}
+          />
 
-            <InputWithLabel
-              label="Comprimento da peça"
-              onChange={(event) =>
-                setComprimentoDaPeca(event.currentTarget.value)
-              }
-            />
-          </div>
+          <SelectWithLabel
+            label="Material"
+            onValueChange={setMaterial}
+            options={['Aço', 'Aluminio']}
+            value={material}
+          />
 
-          <div className="flex flex-col gap-2">
-            <SelectWithLabel
-              label="Material"
-              onValueChange={setMaterial}
-              options={['Aço', 'Aluminio']}
-              value={material}
-            />
+          <InputWithLabel
+            label="Comprimento da peça"
+            onChange={(event) =>
+              setComprimentoDaPeca(event.currentTarget.value)
+            }
+          />
 
-            <Combobox
-              value={passoName}
-              setValue={setPassoName}
-              options={memoizedPassos}
-            />
+          <Combobox
+            value={passoName}
+            setValue={setPassoName}
+            options={memoizedPassos}
+          />
+
+          <PrecoInputWithLabel
+            label="Preço atual"
+            onChange={(event) => setPreco(event.currentTarget.value)}
+          />
+
+          <div className="flex min-h-[2.5rem] items-end justify-end">
+            <Button type="submit" variant="outline" size="sm" className="shrink-0">
+              Calcular
+            </Button>
           </div>
         </div>
 
-        <PrecoInputWithLabel
-          label="Preço atual"
-          onChange={(event) => setPreco(event.currentTarget.value)}
-        />
-
-        <Button type="submit" variant="outline" className="mt-4">
-          Calcular
-        </Button>
-
-        <Label className="absolute bottom-1.5 left-1/3 text-xl">
-          Valor final: {textoValorFinal}
-        </Label>
+        <div className="mt-3 border-t border-border/60 pt-2.5">
+          <p className="text-sm font-semibold tabular-nums tracking-tight text-foreground">
+            Valor final:{' '}
+            <span className="font-mono text-base font-medium">
+              {textoValorFinal}
+            </span>
+          </p>
+        </div>
       </form>
     </div>
   )

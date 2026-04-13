@@ -20,8 +20,12 @@
     "windows": [
       {
         "title": "Calcular preço",
-        "width": 600,
-        "height": 400
+        "width": 440,
+        "height": 400,
+        "minWidth": 380,
+        "minHeight": 320,
+        "center": true,
+        "resizable": true
       }
     ],
     "security": {
