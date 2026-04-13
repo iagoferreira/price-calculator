@@ -9,7 +9,9 @@ export function encontrarPesoDoMaterial(diametroRecebido, material) {
     lowerCaseMaterial === 'aço' ? pesosAco : pesosAluminio
   let pesoDoMaterial
 
-  console.log(arrayDePesosDoMaterial)
+  if (import.meta.env.DEV) {
+    console.log(arrayDePesosDoMaterial)
+  }
 
   for (let i = 0; i < arrayDePesosDoMaterial.length; i++) {
     const { diametro, valor } = arrayDePesosDoMaterial[i]

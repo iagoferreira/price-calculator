@@ -5,10 +5,12 @@ import { Form } from '../Form'
 import { calcularPesoDaPeca } from '../../utils/calcularPesoDaPeca'
 import { pegarPassos } from '../../utils/pegarPassos'
 
+/** Lê o número em pt-BR após «Valor final:» (ex.: 1,12 ou 1.234,56). */
 function readValorFinal(container) {
   const el = within(container).getByText(/valor final:/i)
   const raw = el.textContent.replace(/^[\s\S]*valor final:\s*/i, '').trim()
-  return Number.parseFloat(raw)
+  if (raw === '') return Number.NaN
+  return Number.parseFloat(raw.replace(/\./g, '').replace(',', '.'))
 }
 
 describe('Form', () => {
@@ -26,14 +28,14 @@ describe('Form', () => {
     const expected =
       calcularPesoDaPeca('10', passo0.valor, 'Aço', '100') * preco
 
-    await user.type(form.getByLabelText(/numero de dentes/i), '10')
+    await user.type(form.getByLabelText(/número de dentes/i), '10')
     await user.type(form.getByLabelText(/comprimento da peça/i), '100')
     await user.type(form.getByLabelText(/preço atual/i), String(preco))
 
     await user.click(form.getByRole('button', { name: /calcular/i }))
 
     await waitFor(() => {
-      expect(readValorFinal(container)).toBeCloseTo(expected, 5)
+      expect(readValorFinal(container)).toBeCloseTo(expected, 10)
     })
   })
 
@@ -44,7 +46,7 @@ describe('Form', () => {
 
     const passo0 = pegarPassos()[0]
     const preco = 2
-    await user.type(form.getByLabelText(/numero de dentes/i), '10')
+    await user.type(form.getByLabelText(/número de dentes/i), '10')
     await user.type(form.getByLabelText(/comprimento da peça/i), '100')
     await user.type(form.getByLabelText(/preço atual/i), String(preco))
 
@@ -61,7 +63,7 @@ describe('Form', () => {
     const expected =
       calcularPesoDaPeca('10', passo0.valor, 'Aluminio', '100') * preco
     await waitFor(() => {
-      expect(readValorFinal(container)).toBeCloseTo(expected, 5)
+      expect(readValorFinal(container)).toBeCloseTo(expected, 10)
     })
   })
 
@@ -73,14 +75,14 @@ describe('Form', () => {
     const passoH = pegarPassos().find((p) => p.passo === 'H')
     expect(passoH).toBeDefined()
 
-    await user.type(form.getByLabelText(/numero de dentes/i), '10')
+    await user.type(form.getByLabelText(/número de dentes/i), '10')
     await user.type(form.getByLabelText(/comprimento da peça/i), '100')
     await user.type(form.getByLabelText(/preço atual/i), '1')
 
     const passoTrigger = form.getByRole('combobox', { name: /passo/i })
     await user.click(passoTrigger)
 
-    await screen.findByPlaceholderText(/procure passo/i)
+    await screen.findByPlaceholderText(/procure um passo/i)
 
     await user.click(
       within(document.body).getByRole('option', { name: /^H$/i })
@@ -90,7 +92,26 @@ describe('Form', () => {
 
     const expected = calcularPesoDaPeca('10', passoH.valor, 'Aço', '100') * 1
     await waitFor(() => {
-      expect(readValorFinal(container)).toBeCloseTo(expected, 5)
+      expect(readValorFinal(container)).toBeCloseTo(expected, 10)
+    })
+  })
+
+  it('não mostra valor final quando o preço é inválido', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<Form />)
+    const form = within(container)
+
+    await user.type(form.getByLabelText(/número de dentes/i), '10')
+    await user.type(form.getByLabelText(/comprimento da peça/i), '100')
+    await user.type(form.getByLabelText(/preço atual/i), 'não-é-número')
+
+    await user.click(form.getByRole('button', { name: /calcular/i }))
+
+    await waitFor(() => {
+      const el = within(container).getByText(/valor final:/i)
+      expect(el.textContent.replace(/^[\s\S]*valor final:\s*/i, '').trim()).toBe(
+        ''
+      )
     })
   })
 })

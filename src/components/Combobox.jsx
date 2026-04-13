@@ -36,14 +36,14 @@ export function Combobox({ value, setValue, options }) {
             aria-expanded={open}
             className="w-[180px] justify-between"
           >
-            {value ? value : 'Selecione o passo...'}
+            {value ? value : 'Selecione o passo…'}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[200px] p-0">
           <Command className="bg-white">
-            <CommandInput placeholder="Procure passo..." />
-            <CommandEmpty>Nenhum passo encontrado.</CommandEmpty>
+            <CommandInput placeholder="Procure um passo…" />
+            <CommandEmpty>Nenhum passo encontrado</CommandEmpty>
             <CommandGroup>
               <CommandList className="max-h-40">
                 {options.map((option) => (

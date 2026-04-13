@@ -5,7 +5,9 @@ import App from '../App'
 describe('App', () => {
   it('renders instructions and the calculator form', () => {
     render(<App />)
-    expect(screen.getByText(/Após preencher os campos/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/numero de dentes/i)).toBeInTheDocument()
+    expect(
+      screen.getByText(/Após preencher os campos, clique no botão Calcular/i)
+    ).toBeInTheDocument()
+    expect(screen.getByLabelText(/número de dentes/i)).toBeInTheDocument()
   })
 })
