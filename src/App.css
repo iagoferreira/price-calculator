@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@config '../tailwind.config.js';
 
 @layer base {
   /* Light surfaces: rgb(244, 244, 243) → hsl(60 4.35% 95.49%) */

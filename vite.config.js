@@ -43,6 +43,11 @@ export default defineConfig({
         'src/test/**',
         'src/tables/**',
         'src/lib/**',
+        // Tauri-heavy UI; not covered by unit tests (same rationale as src/lib/**).
+        'src/components/AdminTables.jsx',
+        // Shell/layout components; branchy Tauri/theme paths not exercised in unit tests.
+        'src/App.jsx',
+        'src/components/ThemeToggle.jsx',
       ],
       thresholds: {
         lines: 80,

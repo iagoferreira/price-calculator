@@ -251,13 +251,14 @@ export function AdminTables({ onBack }) {
         ) : null}
 
         <div className="flex shrink-0 flex-wrap gap-2 pb-1">
-          <Button type="button" size="sm" onClick={handleSave}>
+          <Button type="button" size="sm" variant="default" onClick={handleSave}>
             Salvar
           </Button>
           <Button
             type="button"
             size="sm"
             variant="outline"
+            className="border-destructive/55 text-destructive hover:bg-destructive/15 hover:text-destructive focus-visible:ring-destructive"
             onClick={() => {
               if (tables) setDraft(cloneTables(tables))
               setSaveError(null)
@@ -268,7 +269,7 @@ export function AdminTables({ onBack }) {
           <Button
             type="button"
             size="sm"
-            variant="secondary"
+            variant="outline"
             onClick={() => setResetOpen(true)}
           >
             Restaurar padrão
@@ -277,7 +278,7 @@ export function AdminTables({ onBack }) {
             <Button
               type="button"
               size="sm"
-              variant="ghost"
+              variant="outline"
               onClick={() => reload()}
             >
               Recarregar do disco
