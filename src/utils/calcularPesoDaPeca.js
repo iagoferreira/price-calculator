@@ -6,10 +6,11 @@ export function calcularPesoDaPeca(
   numeroDeDentes,
   passo,
   material,
-  comprimentoDaPeca
+  comprimentoDaPeca,
+  tables
 ) {
   const diametro = calcularDiametro(numeroDeDentes, passo)
-  const pesoEmKgM = encontrarPesoDoMaterial(diametro, material)
+  const pesoEmKgM = encontrarPesoDoMaterial(diametro, material, tables)
   const pesoEmKgMM = transformarKgMparaKgMM(pesoEmKgM)
 
   if (import.meta.env.DEV) {

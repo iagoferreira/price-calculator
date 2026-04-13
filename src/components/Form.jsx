@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { calcularPesoDaPeca } from '@/utils/calcularPesoDaPeca'
 import { pegarPassos } from '@/utils/pegarPassos'
+import { useTables } from '@/context/TablesContext'
 import { InputWithLabel, PrecoInputWithLabel } from '@/components/InputWithLabel'
 import { Button } from '@/components/ui/button'
 import { SelectWithLabel } from '@/components/SelectWithLabel'
@@ -31,9 +32,21 @@ function getPassosArray(passos) {
 }
 
 export function Form() {
-  const passos = useMemo(() => pegarPassos(), [])
+  const { tables, isLoading } = useTables()
+  const passos = useMemo(
+    () => (tables ? pegarPassos(tables) : []),
+    [tables]
+  )
   const [numeroDeDentes, setNumeroDeDentes] = useState('')
-  const [passoName, setPassoName] = useState(passos[0].passo)
+  const [passoName, setPassoName] = useState('')
+
+  useEffect(() => {
+    if (!passos.length) return
+    setPassoName((prev) => {
+      if (prev && passos.some((p) => p.passo === prev)) return prev
+      return passos[0].passo
+    })
+  }, [passos])
   const [material, setMaterial] = useState('Aço')
   const [comprimentoDaPeca, setComprimentoDaPeca] = useState('')
   const [pesoDaPeca, setPesoDaPeca] = useState('')
@@ -51,7 +64,8 @@ export function Form() {
       numeroDeDentes,
       passoValue,
       material,
-      comprimentoDaPeca
+      comprimentoDaPeca,
+      tables
     )
     const precoNumero = parseNumeroDigitado(preco)
 
@@ -70,6 +84,12 @@ export function Form() {
     pesoDaPeca === ''
       ? ''
       : formatarValorFinalPreciso(pesoDaPeca)
+
+  if (isLoading || !tables) {
+    return (
+      <p className="text-sm text-muted-foreground">Carregando tabelas…</p>
+    )
+  }
 
   return (
     <div>

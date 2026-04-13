@@ -2,8 +2,10 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Form } from '../Form'
+import { TablesProvider } from '../../context/TablesContext'
 import { calcularPesoDaPeca } from '../../utils/calcularPesoDaPeca'
 import { pegarPassos } from '../../utils/pegarPassos'
+import { getBundledDefaultTables } from '../../lib/bundledTables'
 
 /** Lê o número em pt-BR após «Valor final:» (ex.: 1,12 ou 1.234,56). */
 function readValorFinal(container) {
@@ -13,6 +15,14 @@ function readValorFinal(container) {
   return Number.parseFloat(raw.replace(/\./g, '').replace(',', '.'))
 }
 
+function renderForm() {
+  return render(
+    <TablesProvider>
+      <Form />
+    </TablesProvider>
+  )
+}
+
 describe('Form', () => {
   beforeEach(() => {
     vi.spyOn(console, 'log').mockImplementation(() => {})
@@ -20,14 +30,18 @@ describe('Form', () => {
 
   it('submits with user input and shows peso × preço for default passo and Aço', async () => {
     const user = userEvent.setup()
-    const { container } = render(<Form />)
+    const tables = getBundledDefaultTables()
+    const { container } = renderForm()
     const form = within(container)
 
-    const passo0 = pegarPassos()[0]
+    const passo0 = pegarPassos(tables)[0]
     const preco = 5
     const expected =
-      calcularPesoDaPeca('10', passo0.valor, 'Aço', '100') * preco
+      calcularPesoDaPeca('10', passo0.valor, 'Aço', '100', tables) * preco
 
+    await waitFor(() => {
+      expect(form.getByLabelText(/número de dentes/i)).toBeInTheDocument()
+    })
     await user.type(form.getByLabelText(/número de dentes/i), '10')
     await user.type(form.getByLabelText(/comprimento da peça/i), '100')
     await user.type(form.getByLabelText(/preço atual/i), String(preco))
@@ -41,11 +55,15 @@ describe('Form', () => {
 
   it('updates resultado when material is changed to Aluminio', async () => {
     const user = userEvent.setup()
-    const { container } = render(<Form />)
+    const tables = getBundledDefaultTables()
+    const { container } = renderForm()
     const form = within(container)
 
-    const passo0 = pegarPassos()[0]
+    const passo0 = pegarPassos(tables)[0]
     const preco = 2
+    await waitFor(() => {
+      expect(form.getByLabelText(/número de dentes/i)).toBeInTheDocument()
+    })
     await user.type(form.getByLabelText(/número de dentes/i), '10')
     await user.type(form.getByLabelText(/comprimento da peça/i), '100')
     await user.type(form.getByLabelText(/preço atual/i), String(preco))
@@ -61,7 +79,8 @@ describe('Form', () => {
     await user.click(form.getByRole('button', { name: /calcular/i }))
 
     const expected =
-      calcularPesoDaPeca('10', passo0.valor, 'Aluminio', '100') * preco
+      calcularPesoDaPeca('10', passo0.valor, 'Aluminio', '100', tables) *
+      preco
     await waitFor(() => {
       expect(readValorFinal(container)).toBeCloseTo(expected, 10)
     })
@@ -69,12 +88,16 @@ describe('Form', () => {
 
   it('lets the user pick another passo from the combobox and recalculates', async () => {
     const user = userEvent.setup()
-    const { container } = render(<Form />)
+    const tables = getBundledDefaultTables()
+    const { container } = renderForm()
     const form = within(container)
 
-    const passoH = pegarPassos().find((p) => p.passo === 'H')
+    const passoH = pegarPassos(tables).find((p) => p.passo === 'H')
     expect(passoH).toBeDefined()
 
+    await waitFor(() => {
+      expect(form.getByLabelText(/número de dentes/i)).toBeInTheDocument()
+    })
     await user.type(form.getByLabelText(/número de dentes/i), '10')
     await user.type(form.getByLabelText(/comprimento da peça/i), '100')
     await user.type(form.getByLabelText(/preço atual/i), '1')
@@ -90,7 +113,8 @@ describe('Form', () => {
 
     await user.click(form.getByRole('button', { name: /calcular/i }))
 
-    const expected = calcularPesoDaPeca('10', passoH.valor, 'Aço', '100') * 1
+    const expected =
+      calcularPesoDaPeca('10', passoH.valor, 'Aço', '100', tables) * 1
     await waitFor(() => {
       expect(readValorFinal(container)).toBeCloseTo(expected, 10)
     })
@@ -98,9 +122,12 @@ describe('Form', () => {
 
   it('não mostra valor final quando o preço é inválido', async () => {
     const user = userEvent.setup()
-    const { container } = render(<Form />)
+    const { container } = renderForm()
     const form = within(container)
 
+    await waitFor(() => {
+      expect(form.getByLabelText(/número de dentes/i)).toBeInTheDocument()
+    })
     await user.type(form.getByLabelText(/número de dentes/i), '10')
     await user.type(form.getByLabelText(/comprimento da peça/i), '100')
     await user.type(form.getByLabelText(/preço atual/i), 'não-é-número')

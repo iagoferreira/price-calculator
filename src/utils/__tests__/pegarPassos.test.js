@@ -1,9 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import { pegarPassos } from '../pegarPassos'
+import { getBundledDefaultTables } from '@/lib/bundledTables'
 
 describe('pegarPassos', () => {
   it('returns a non-empty list with passo and valor keys', () => {
-    const passos = pegarPassos()
+    const passos = pegarPassos(getBundledDefaultTables())
     expect(passos.length).toBeGreaterThan(0)
     for (const p of passos) {
       expect(p).toHaveProperty('passo')
@@ -14,7 +15,7 @@ describe('pegarPassos', () => {
   })
 
   it('includes known pitch entries from tabela-passos', () => {
-    const passos = pegarPassos()
+    const passos = pegarPassos(getBundledDefaultTables())
     const xl = passos.find((p) => p.passo === 'XL')
     expect(xl?.valor).toBe(5.08)
     const h = passos.find((p) => p.passo === 'H')
