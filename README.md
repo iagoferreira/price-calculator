@@ -1,4 +1,4 @@
-# Calcular preço
+# Price calculator
 
 Desktop app for estimating **machining part prices** (peso do material, passos, diâmetros, etc.). Built with **Tauri** (Rust shell) and **React** + **Vite**, with **shadcn/ui** and **Tailwind CSS**.
 
