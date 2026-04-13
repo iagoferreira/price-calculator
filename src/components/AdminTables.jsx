@@ -54,7 +54,7 @@ function EditableTable({ title, rows, onChange, kind }) {
           Adicionar linha
         </Button>
       </div>
-      <div className="max-h-[min(22rem,50vh)] overflow-y-auto overflow-x-hidden rounded-md border border-border">
+      <div className="thin-scrollbar max-h-[min(22rem,50vh)] overflow-y-auto overflow-x-hidden rounded-md border border-border">
         <table className="w-full border-separate border-spacing-0 text-left text-xs">
           <thead className="sticky top-0 z-10 border-b border-border bg-card shadow-[0_1px_0_0_hsl(var(--border))]">
             <tr>
@@ -216,7 +216,7 @@ export function AdminTables({ onBack }) {
           </Button>
         </div>
 
-        <div className="min-h-0 flex-1 space-y-5 overflow-y-auto rounded-xl border border-border/80 bg-card/80 p-4 shadow-sm">
+        <div className="thin-scrollbar min-h-0 flex-1 space-y-5 overflow-y-auto rounded-xl border border-border/80 bg-card/80 p-4 shadow-sm">
           <EditableTable
             title="Passos"
             kind="passos"
